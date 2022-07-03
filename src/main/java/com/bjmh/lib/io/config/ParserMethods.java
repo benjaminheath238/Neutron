@@ -154,7 +154,6 @@ public class ParserMethods {
   }
 
   public static ConfigSection inheritOptions(ConfigSection section, Configuration config) {
-
     for (ConfigNode node : section.getParent().getChildren()) {
       if (node instanceof ConfigOption) {
         ConfigOption option = config.newConfigOption();
