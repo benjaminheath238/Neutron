@@ -8,4 +8,6 @@ public interface ConfigSection extends ConfigNode {
   public void addChild(ConfigNode child);
 
   public Collection<ConfigNode> getChildren();
+
+  public void foreach(ConfigConsumer consumer);
 }

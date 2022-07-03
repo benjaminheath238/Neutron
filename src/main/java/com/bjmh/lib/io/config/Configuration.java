@@ -19,7 +19,7 @@ public class Configuration implements ConfigSection {
     this.parent = null;
     this.name = name;
     this.children = new HashMap<>();
-    this.type = ConfigNode.Type.ROOT_SECTION;
+    this.type = Type.ROOT_SECTION;
   }
 
   public ConfigSection getParent() {
@@ -61,12 +61,20 @@ public class Configuration implements ConfigSection {
     // this.name = name;
   }
 
-  public void setType(ConfigNode.Type type) {
+  public void setType(Type type) {
     // this.type = type;
   }
 
-  public ConfigNode.Type getType() {
+  public Type getType() {
     return type;
+  }
+
+  public void foreach(ConfigConsumer consumer) {
+    for (ConfigNode node : this.children.values()) {
+      if (node instanceof ConfigSection)
+        ((ConfigSection) node).foreach(consumer);
+      consumer.accept(node);
+    }
   }
 
   public String toString() {
@@ -117,11 +125,11 @@ public class Configuration implements ConfigSection {
         return this.value;
       }
 
-      public void setType(ConfigNode.Type type) {
+      public void setType(Type type) {
         this.type = type;
       }
 
-      public ConfigNode.Type getType() {
+      public Type getType() {
         return type;
       }
 
@@ -144,7 +152,7 @@ public class Configuration implements ConfigSection {
       private String name;
       private ConfigSection parent;
       private Map<String, ConfigNode> children = new HashMap<>();
-      private ConfigNode.Type type;
+      private Type type;
 
       public ConfigSection getParent() {
         return this.parent;
@@ -175,12 +183,20 @@ public class Configuration implements ConfigSection {
         this.name = name;
       }
 
-      public void setType(ConfigNode.Type type) {
+      public void setType(Type type) {
         this.type = type;
       }
 
-      public ConfigNode.Type getType() {
+      public Type getType() {
         return type;
+      }
+
+      public void foreach(ConfigConsumer consumer) {
+        for (ConfigNode node : this.children.values()) {
+          if (node instanceof ConfigSection)
+            ((ConfigSection) node).foreach(consumer);
+          consumer.accept(node);
+        }
       }
 
       public String toString() {
