@@ -100,6 +100,7 @@ public class ParserMethods {
     option.setParent(parent);
     option.setName(line.split("=")[0].trim());
     option.setValue(line.split("=")[1].replace("\"", "").trim());
+    option.setType(ConfigNode.Type.SIMPLE_OPTION);
 
     return option;
   }
@@ -110,6 +111,7 @@ public class ParserMethods {
 
     section.setParent(parent);
     section.setName(line.split("=")[0]);
+    section.setType(ConfigNode.Type.COMPLEX_OPTION);
 
     if (line.endsWith("="))
       return section;
@@ -126,6 +128,7 @@ public class ParserMethods {
 
     section.setParent(config);
     section.setName(line.replaceAll("[\\[\\]]", ""));
+    section.setType(ConfigNode.Type.SIMPLE_SECTION);
 
     config.addChild(section);
 
@@ -147,6 +150,7 @@ public class ParserMethods {
     }
 
     section.setName(headers[headers.length - 1]);
+    section.setType(ConfigNode.Type.SIMPLE_SECTION);
 
     current.addChild(section);
 
@@ -154,6 +158,7 @@ public class ParserMethods {
   }
 
   public static ConfigSection inheritOptions(ConfigSection section, Configuration config) {
+
     for (ConfigNode node : section.getParent().getChildren()) {
       if (node instanceof ConfigOption) {
         ConfigOption option = config.newConfigOption();
@@ -161,6 +166,7 @@ public class ParserMethods {
         option.setParent(section);
         option.setName(node.getName());
         option.setValue(((ConfigOption) node).getValue());
+        option.setType(node.getType());
 
         if (section.getChild(option.getName()) == null)
           section.addChild(option);

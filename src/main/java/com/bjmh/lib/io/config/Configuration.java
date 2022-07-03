@@ -13,11 +13,13 @@ public class Configuration implements ConfigSection {
   private String name;
   private ConfigSection parent;
   private Map<String, ConfigNode> children;
+  private Type type;
 
   public Configuration(String name) {
     this.parent = null;
     this.name = name;
     this.children = new HashMap<>();
+    this.type = ConfigNode.Type.ROOT_SECTION;
   }
 
   public ConfigSection getParent() {
@@ -59,8 +61,16 @@ public class Configuration implements ConfigSection {
     // this.name = name;
   }
 
+  public void setType(ConfigNode.Type type) {
+    // this.type = type;
+  }
+
+  public ConfigNode.Type getType() {
+    return type;
+  }
+
   public String toString() {
-    return "{name=" + this.name + ", children=" + this.children + "}";
+    return "{name=" + this.name + ", type=" + this.type + ", children=" + this.children + "}";
   }
 
   public void parse(String path, ParserMethod method) throws IOException {
@@ -81,6 +91,7 @@ public class Configuration implements ConfigSection {
       private ConfigSection parent;
       private String name;
       private String value;
+      private Type type;
 
       public ConfigSection getParent() {
         return this.parent;
@@ -106,11 +117,21 @@ public class Configuration implements ConfigSection {
         return this.value;
       }
 
+      public void setType(ConfigNode.Type type) {
+        this.type = type;
+      }
+
+      public ConfigNode.Type getType() {
+        return type;
+      }
+
       public String toString() {
         return "{parent="
             + (this.parent == null ? null : this.parent.getName())
             + ", name="
             + this.name
+            + ", type="
+            + this.type
             + ", value="
             + this.value
             + "}";
@@ -123,6 +144,7 @@ public class Configuration implements ConfigSection {
       private String name;
       private ConfigSection parent;
       private Map<String, ConfigNode> children = new HashMap<>();
+      private ConfigNode.Type type;
 
       public ConfigSection getParent() {
         return this.parent;
@@ -153,11 +175,21 @@ public class Configuration implements ConfigSection {
         this.name = name;
       }
 
+      public void setType(ConfigNode.Type type) {
+        this.type = type;
+      }
+
+      public ConfigNode.Type getType() {
+        return type;
+      }
+
       public String toString() {
         return "{parent="
             + (this.parent == null ? null : this.parent.getName())
             + ", name="
             + this.name
+            + ", type="
+            + this.type
             + ", children="
             + this.children
             + "}";
@@ -165,9 +197,9 @@ public class Configuration implements ConfigSection {
     };
   }
 
-  public ConfigPath newConfigPath(final String uri) {
+  public ConfigPath newConfigPath(final String location) {
     return new ConfigPath() {
-      private String[] path = uri.split("\\.");
+      private String[] path = location.split("\\.");
       private int index = 0;
 
       public String next() {
