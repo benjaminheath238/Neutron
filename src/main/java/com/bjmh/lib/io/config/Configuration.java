@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class Configuration implements ConfigSection {
   private String name;
   private ConfigSection parent;
-  private Map<String, ConfigNode> children;;
+  private Map<String, ConfigNode> children;
 
   public Configuration(String name) {
     this.parent = null;
@@ -31,8 +31,10 @@ public class Configuration implements ConfigSection {
   public ConfigNode getChild(ConfigPath path) {
     ConfigNode node = this.getChild(path.next());
     while (path.hasNext()) {
-      if (node == null) break;
-      if (node instanceof ConfigSection) node = ((ConfigSection) node).getChild(path.next());
+      if (node == null)
+        break;
+      if (node instanceof ConfigSection)
+        node = ((ConfigSection) node).getChild(path.next());
     }
     return node;
   }

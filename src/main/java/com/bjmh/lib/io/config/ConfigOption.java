@@ -2,7 +2,7 @@ package com.bjmh.lib.io.config;
 
 /**
  * The {@code ConfigOption} is an extension of the {@code ConfigNode} it allows
- * {@code ConfigSections} to have key-value pairs.
+ * {@code ConfigSection} to have key-value pairs.
  * 
  * @see ConfigNode
  * @see ConfigSection
