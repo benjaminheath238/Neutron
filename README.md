@@ -1,2 +1,2 @@
 # Neutron
-Neutron is a library written in Java containing functionality such as config file parsing.
+Neutron is a library written in Java that contains common functionality such as config file parsing.
