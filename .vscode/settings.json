@@ -1,8 +1,0 @@
-{
-    "files.watcherExclude": {
-        "**/target": true
-    },
-    "editor.inlayHints.enabled": "off",
-    "java.configuration.updateBuildConfiguration": "automatic",
-    "explorer.compactFolders": false
-}
