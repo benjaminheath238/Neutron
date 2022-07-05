@@ -1,7 +1,20 @@
 package com.bjmh.lib.io.config;
 
-public interface ConfigOption extends ConfigNode {
-  public String getValue();
+public abstract class ConfigOption extends ConfigNode {
+  public abstract String getValue();
 
-  public void setValue(String value);
+  public abstract void setValue(String value);
+
+  @Override
+  public String toString() {
+    return "{name="
+        + this.getName()
+        + ", type="
+        + this.getType()
+        + ", parent="
+        + this.getParent().getName()
+        + ", value="
+        + this.getValue()
+        + "}";
+  }
 }

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 
-public class Configuration implements ConfigSection {
+public class Configuration extends ConfigSection {
   private String name;
   private ConfigSection parent;
   private Map<String, ConfigNode> children;
@@ -33,10 +33,11 @@ public class Configuration implements ConfigSection {
   public ConfigNode getChild(ConfigPath path) {
     ConfigNode node = this.getChild(path.next());
     while (path.hasNext()) {
-      if (node == null)
+      if (node == null) {
         break;
-      if (node instanceof ConfigSection)
+      } else if (node instanceof ConfigSection) {
         node = ((ConfigSection) node).getChild(path.next());
+      }
     }
     return node;
   }
@@ -71,9 +72,9 @@ public class Configuration implements ConfigSection {
 
   public void foreach(ConfigConsumer consumer) {
     for (ConfigNode node : this.children.values()) {
+      consumer.accept(node);
       if (node instanceof ConfigSection)
         ((ConfigSection) node).foreach(consumer);
-      consumer.accept(node);
     }
   }
 
@@ -132,18 +133,6 @@ public class Configuration implements ConfigSection {
       public Type getType() {
         return type;
       }
-
-      public String toString() {
-        return "{parent="
-            + (this.parent == null ? null : this.parent.getName())
-            + ", name="
-            + this.name
-            + ", type="
-            + this.type
-            + ", value="
-            + this.value
-            + "}";
-      }
     };
   }
 
@@ -193,22 +182,10 @@ public class Configuration implements ConfigSection {
 
       public void foreach(ConfigConsumer consumer) {
         for (ConfigNode node : this.children.values()) {
+          consumer.accept(node);
           if (node instanceof ConfigSection)
             ((ConfigSection) node).foreach(consumer);
-          consumer.accept(node);
         }
-      }
-
-      public String toString() {
-        return "{parent="
-            + (this.parent == null ? null : this.parent.getName())
-            + ", name="
-            + this.name
-            + ", type="
-            + this.type
-            + ", children="
-            + this.children
-            + "}";
       }
     };
   }
