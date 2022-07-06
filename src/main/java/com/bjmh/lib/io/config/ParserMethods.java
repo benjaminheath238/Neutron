@@ -207,6 +207,9 @@ public class ParserMethods {
 
   public static ConfigSection inheritOptions(ConfigSection section) {
     for (ConfigNode node : section.getParent().getChildren()) {
+      if (section.getParent().getType().equals(ConfigNode.Type.ROOT_SECTION))
+        break;
+
       if (node.getType().isSection())
         continue;
 
@@ -220,8 +223,10 @@ public class ParserMethods {
             if (node.getType().canIterate()) {
               section = (ConfigSection) node;
             } else {
-              section.addChild(
-                  new ConfigOption(node.getParent(), node.getName(), node.getType(), ((ConfigOption) node).getValue()));
+              if (section != null)
+                section.addChild(
+                    new ConfigOption(node.getParent(), node.getName(), node.getType(),
+                        ((ConfigOption) node).getValue()));
             }
           }
 
@@ -289,7 +294,7 @@ public class ParserMethods {
   }
 
   public static boolean isSubHeader(String line) {
-    return line.matches("\\[(.*\\.?)*\\]");
+    return line.matches("\\[(.*\\..*)*\\]");
   }
 
   public static boolean isComplexOption(String line) {
@@ -297,11 +302,11 @@ public class ParserMethods {
   }
 
   public static boolean isArray(String line) {
-    return line.matches(".*=\\{(.*,?)+\\}");
+    return line.matches(".*=\\{(.*(,?))+\\}");
   }
 
   public static boolean isMap(String line) {
-    return line.matches(".*=\\{(.*=.*,?)+\\}");
+    return line.matches(".*=\\{(.*=.*(,?))+\\}");
   }
 
   public static boolean isNullMapOrArray(String line) {
