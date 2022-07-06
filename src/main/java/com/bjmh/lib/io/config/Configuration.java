@@ -5,16 +5,9 @@ import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-import java.util.Collection;
-import java.util.Map;
 import java.util.HashMap;
 
 public class Configuration extends ConfigSection {
-  private String name;
-  private ConfigSection parent;
-  private Map<String, ConfigNode> children;
-  private Type type;
-
   public Configuration(String name) {
     this.parent = null;
     this.name = name;
@@ -22,13 +15,6 @@ public class Configuration extends ConfigSection {
     this.type = Type.ROOT_SECTION;
   }
 
-  public ConfigSection getParent() {
-    return this.parent;
-  }
-
-  public ConfigNode getChild(String name) {
-    return this.children.get(name);
-  }
 
   public ConfigNode getChild(ConfigPath path) {
     ConfigNode node = this.getChild(path.next());
@@ -42,166 +28,46 @@ public class Configuration extends ConfigSection {
     return node;
   }
 
-  public String getName() {
-    return this.name;
-  }
 
-  public Collection<ConfigNode> getChildren() {
-    return this.children.values();
-  }
-
+  @Override
   public void setParent(ConfigSection parent) {
-    // this.parent = parent;
+    // The Parent is always null
   }
 
-  public void addChild(ConfigNode child) {
-    this.children.put(child.getName(), child);
-  }
-
+  @Override
   public void setName(String name) {
-    // this.name = name;
+    // The name is not changable
   }
 
+  @Override
   public void setType(Type type) {
-    // this.type = type;
+    // The type is always ROOT_SECTION
   }
 
-  public Type getType() {
-    return type;
+  @Override
+  public int hashCode() {
+    return java.util.Objects.hash(this.getName(), this.getType());
   }
 
-  public void foreach(ConfigConsumer consumer) {
-    for (ConfigNode node : this.children.values()) {
-      consumer.accept(node);
-      if (node instanceof ConfigSection)
-        ((ConfigSection) node).foreach(consumer);
-    }
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof Configuration && this.hashCode() == o.hashCode();
   }
 
+  @Override
   public String toString() {
     return "{name=" + this.name + ", type=" + this.type + ", children=" + this.children + "}";
   }
 
-  public void parse(String path, ParserMethod method) throws IOException {
+  public void parse(String path, ParserMethod method) {
     File file = new File(path);
-    FileReader reader = new FileReader(file);
-    BufferedReader buffer = new BufferedReader(reader);
+    try (FileReader reader = new FileReader(file); BufferedReader buffer = new BufferedReader(reader)) {
 
-    while (buffer.ready()) {
-      method.parse(buffer.readLine(), this);
+      while (buffer.ready()) {
+        method.parse(buffer.readLine(), this);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-    reader.close();
-    buffer.close();
-  }
-
-  public ConfigOption newConfigOption() {
-    return new ConfigOption() {
-      private ConfigSection parent;
-      private String name;
-      private String value;
-      private Type type;
-
-      public ConfigSection getParent() {
-        return this.parent;
-      }
-
-      public String getName() {
-        return this.name;
-      }
-
-      public void setParent(ConfigSection parent) {
-        this.parent = parent;
-      }
-
-      public void setName(String name) {
-        this.name = name;
-      }
-
-      public void setValue(String value) {
-        this.value = value;
-      }
-
-      public String getValue() {
-        return this.value;
-      }
-
-      public void setType(Type type) {
-        this.type = type;
-      }
-
-      public Type getType() {
-        return type;
-      }
-    };
-  }
-
-  public ConfigSection newConfigSection() {
-    return new ConfigSection() {
-      private String name;
-      private ConfigSection parent;
-      private Map<String, ConfigNode> children = new HashMap<>();
-      private Type type;
-
-      public ConfigSection getParent() {
-        return this.parent;
-      }
-
-      public ConfigNode getChild(String name) {
-        return this.children.get(name);
-      }
-
-      public String getName() {
-        return this.name;
-      }
-
-      public Collection<ConfigNode> getChildren() {
-        return this.children.values();
-      }
-
-      public void setParent(ConfigSection parent) {
-        this.parent = parent;
-      }
-
-      public void addChild(ConfigNode child) {
-        child.setParent(this);
-        this.children.put(child.getName(), child);
-      }
-
-      public void setName(String name) {
-        this.name = name;
-      }
-
-      public void setType(Type type) {
-        this.type = type;
-      }
-
-      public Type getType() {
-        return type;
-      }
-
-      public void foreach(ConfigConsumer consumer) {
-        for (ConfigNode node : this.children.values()) {
-          consumer.accept(node);
-          if (node instanceof ConfigSection)
-            ((ConfigSection) node).foreach(consumer);
-        }
-      }
-    };
-  }
-
-  public ConfigPath newConfigPath(final String location) {
-    return new ConfigPath() {
-      private String[] path = location.split("\\.");
-      private int index = 0;
-
-      public String next() {
-        return path[index++];
-      }
-
-      public boolean hasNext() {
-        return index < path.length;
-      }
-    };
   }
 }

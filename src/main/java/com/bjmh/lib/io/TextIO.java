@@ -3,6 +3,9 @@ package com.bjmh.lib.io;
 import java.io.IOException;
 
 public class TextIO {
+  private TextIO() {
+  }
+
   public static String next(int len) {
     byte[] bytes = new byte[len];
     while (true) {

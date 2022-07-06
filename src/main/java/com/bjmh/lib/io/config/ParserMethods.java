@@ -1,6 +1,15 @@
 package com.bjmh.lib.io.config;
 
 public class ParserMethods {
+  private ParserMethods() {
+  }
+
+  public static void main(String[] args) {
+    Configuration cpm = new Configuration("root");
+    cpm.parse("/home/user/EmilyJennson.ini", INI_PARSER_WITH_ARRAYS_AND_MAPS);
+    cpm.foreach(System.out::println);
+  }
+
   public static final ParserMethod INI_PARSER_SIMPLE = new ParserMethod() {
     public void parse(String line, Configuration config) {
       line = removeComments(line);
@@ -8,7 +17,7 @@ public class ParserMethods {
       if (line.isEmpty())
         return;
 
-      config.addChild(parseSimpleOption(line, config, config));
+      config.addChild(parseSimpleOption(line, config));
     }
   };
 
@@ -25,7 +34,7 @@ public class ParserMethods {
         section = parseHeader(line, config);
       } else {
         firstNonNull(section, config)
-            .addChild(parseSimpleOption(line, config, firstNonNull(section, config)));
+            .addChild(parseSimpleOption(line, firstNonNull(section, config)));
       }
     }
   };
@@ -43,10 +52,10 @@ public class ParserMethods {
         section = parseHeader(line, config);
       } else if (isComplexOption(line)) {
         firstNonNull(section, config)
-            .addChild(parseComplexOption(line, config, firstNonNull(section, config)));
+            .addChild(parseComplexOption(line, firstNonNull(section, config)));
       } else {
         firstNonNull(section, config)
-            .addChild(parseSimpleOption(line, config, firstNonNull(section, config)));
+            .addChild(parseSimpleOption(line, firstNonNull(section, config)));
       }
     }
   };
@@ -65,10 +74,10 @@ public class ParserMethods {
       } else if (isHeader(line)) {
         section = parseHeader(line, config);
       } else if (isComplexOption(line)) {
-        firstNonNull(section, config).addChild(parseComplexOption(line, config, config));
+        firstNonNull(section, config).addChild(parseComplexOption(line, config));
       } else {
         firstNonNull(section, config)
-            .addChild(parseSimpleOption(line, config, firstNonNull(section, config)));
+            .addChild(parseSimpleOption(line, firstNonNull(section, config)));
       }
     }
   };
@@ -83,17 +92,17 @@ public class ParserMethods {
         return;
 
       if (isSubHeader(line)) {
-        section = inheritOptions(parseSubHeader(line, config), config);
+        section = inheritOptions(parseSubHeader(line, config));
       } else if (isHeader(line)) {
         section = parseHeader(line, config);
       } else if (isComplexOption(line)) {
         firstNonNull(section, config)
             .addChild(
                 inheritOptions(
-                    parseComplexOption(line, config, firstNonNull(section, config)), config));
+                    parseComplexOption(line, firstNonNull(section, config))));
       } else {
         firstNonNull(section, config)
-            .addChild(parseSimpleOption(line, config, firstNonNull(section, config)));
+            .addChild(parseSimpleOption(line, firstNonNull(section, config)));
       }
     }
   };
@@ -108,30 +117,32 @@ public class ParserMethods {
         return;
 
       if (isSubHeader(line)) {
-        section = inheritOptions(parseSubHeader(line, config), config);
+        section = inheritOptions(parseSubHeader(line, config));
       } else if (isHeader(line)) {
         section = parseHeader(line, config);
       } else if (isComplexOption(line)) {
         firstNonNull(section, config)
             .addChild(
                 inheritOptions(
-                    parseComplexOption(line, config, firstNonNull(section, config)), config));
+                    parseComplexOption(line, firstNonNull(section, config))));
       } else if (isNullMapOrArray(line)) {
-
+        // Catch the case of an empty array or map
       } else if (isMap(line)) {
-        firstNonNull(section, config).addChild(parseMap(line, config, firstNonNull(section, config)));
+        firstNonNull(section, config)
+            .addChild(inheritOptions(parseMap(line, firstNonNull(section, config))));
       } else if (isArray(line)) {
-        firstNonNull(section, config).addChild(parseArray(line, config, firstNonNull(section, config)));
+        firstNonNull(section, config)
+            .addChild(inheritOptions(parseArray(line, firstNonNull(section, config))));
       } else {
         firstNonNull(section, config)
-            .addChild(parseSimpleOption(line, config, firstNonNull(section, config)));
+            .addChild(parseSimpleOption(line, firstNonNull(section, config)));
       }
     }
   };
 
   public static ConfigOption parseSimpleOption(
-      String line, Configuration config, ConfigSection parent) {
-    ConfigOption option = config.newConfigOption();
+      String line, ConfigSection parent) {
+    ConfigOption option = new ConfigOption();
 
     option.setParent(parent);
     option.setName(line.split("=")[0].trim());
@@ -142,8 +153,8 @@ public class ParserMethods {
   }
 
   public static ConfigSection parseComplexOption(
-      String line, Configuration config, ConfigSection parent) {
-    ConfigSection section = config.newConfigSection();
+      String line, ConfigSection parent) {
+    ConfigSection section = new ConfigSection();
     line = line.replaceAll("[\\(\\)]", "").trim();
 
     section.setParent(parent);
@@ -154,14 +165,14 @@ public class ParserMethods {
       return section;
 
     for (String option : line.split("=", 2)[1].split(",")) {
-      section.addChild(parseSimpleOption(option, config, section));
+      section.addChild(parseSimpleOption(option, section));
     }
 
     return section;
   }
 
   public static ConfigSection parseHeader(String line, Configuration config) {
-    ConfigSection section = config.newConfigSection();
+    ConfigSection section = new ConfigSection();
 
     section.setParent(config);
     section.setName(line.replaceAll("[\\[\\]]", ""));
@@ -175,7 +186,7 @@ public class ParserMethods {
   public static ConfigSection parseSubHeader(String line, Configuration config) {
     String[] headers = line.replaceAll("[\\[\\]]", "").split("\\.");
 
-    ConfigSection section = config.newConfigSection();
+    ConfigSection section = new ConfigSection();
     ConfigSection current = config;
 
     for (int i = 0; i < headers.length - 1; i++) {
@@ -194,35 +205,47 @@ public class ParserMethods {
     return section;
   }
 
-  public static ConfigSection inheritOptions(ConfigSection section, Configuration config) {
+  public static ConfigSection inheritOptions(ConfigSection section) {
     for (ConfigNode node : section.getParent().getChildren()) {
-      if (node instanceof ConfigOption) {
-        ConfigOption option = config.newConfigOption();
+      if (node.getType().isSection())
+        continue;
 
-        option.setParent(section);
-        option.setName(node.getName());
-        option.setValue(((ConfigOption) node).getValue());
-        option.setType(node.getType());
+      if (node.getType().canIterate()) {
+        ConfigSection copy = (ConfigSection) node;
+        copy.foreach(new ConfigConsumer() {
+          private ConfigSection section = null;
 
-        if (section.getChild(option.getName()) == null)
-          section.addChild(option);
+          @Override
+          public void accept(ConfigNode node) {
+            if (node.getType().canIterate()) {
+              section = (ConfigSection) node;
+            } else {
+              section.addChild(
+                  new ConfigOption(node.getParent(), node.getName(), node.getType(), ((ConfigOption) node).getValue()));
+            }
+          }
+
+        });
+      } else {
+        section.addChild(
+            new ConfigOption(node.getParent(), node.getName(), node.getType(), ((ConfigOption) node).getValue()));
       }
     }
 
     return section;
   }
 
-  public static ConfigSection parseArray(String line, Configuration config, ConfigSection parent) {
+  public static ConfigSection parseArray(String line, ConfigSection parent) {
     line = line.replaceAll("[\"\\{\\}]*", "");
     String[] contents = line.split("=", 2)[1].split(",");
 
-    ConfigSection section = config.newConfigSection();
+    ConfigSection section = new ConfigSection();
     section.setParent(parent);
     section.setName(line.split("=")[0]);
     section.setType(ConfigNode.Type.ARRAY_OPTION);
 
     for (int i = 0; i < contents.length; i++) {
-      ConfigOption option = config.newConfigOption();
+      ConfigOption option = new ConfigOption();
 
       option.setParent(section);
       option.setName(String.valueOf(i));
@@ -235,17 +258,17 @@ public class ParserMethods {
     return section;
   }
 
-  public static ConfigSection parseMap(String line, Configuration config, ConfigSection parent) {
+  public static ConfigSection parseMap(String line, ConfigSection parent) {
     line = line.replaceAll("[\"\\{\\}]*", "");
     String[] contents = line.split("=", 2)[1].split(",");
 
-    ConfigSection section = config.newConfigSection();
+    ConfigSection section = new ConfigSection();
     section.setParent(parent);
     section.setName(line.split("=", 2)[0]);
     section.setType(ConfigNode.Type.MAP_OPTION);
 
     for (String content : contents) {
-      ConfigOption option = config.newConfigOption();
+      ConfigOption option = new ConfigOption();
       option.setParent(section);
       option.setName(content.split("=")[0].trim());
       option.setValue(content.split("=")[1].trim());
@@ -266,7 +289,7 @@ public class ParserMethods {
   }
 
   public static boolean isSubHeader(String line) {
-    return line.matches("\\[(.*\\..*)*\\]");
+    return line.matches("\\[(.*\\.?)*\\]");
   }
 
   public static boolean isComplexOption(String line) {
@@ -274,11 +297,11 @@ public class ParserMethods {
   }
 
   public static boolean isArray(String line) {
-    return line.matches(".*=\\{(\".*\",?)+\\}");
+    return line.matches(".*=\\{(.*,?)+\\}");
   }
 
   public static boolean isMap(String line) {
-    return line.matches(".*=\\{(.*=\".*\",?)+\\}");
+    return line.matches(".*=\\{(.*=.*,?)+\\}");
   }
 
   public static boolean isNullMapOrArray(String line) {
@@ -286,14 +309,14 @@ public class ParserMethods {
   }
 
   public static boolean isSectionPresent(String name, ConfigSection section) {
-    return section.getChild(name) != null && section.getChild(name) instanceof ConfigSection;
+    return section.getChild(name) instanceof ConfigSection;
   }
 
-  public static ConfigSection firstNonNull(ConfigSection... sections) {
+  public static ConfigSection firstNonNull(ConfigSection... sections) throws NullPointerException {
     for (ConfigSection section : sections) {
       if (section != null)
         return section;
     }
-    return null;
+    throw new NullPointerException();
   }
 }

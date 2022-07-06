@@ -1,17 +1,41 @@
 package com.bjmh.lib.io.config;
 
-public abstract class ConfigNode implements Comparable<ConfigNode> {
-  public abstract ConfigSection getParent();
+public class ConfigNode implements Comparable<ConfigNode> {
+  protected ConfigSection parent;
+  protected String name;
+  protected Type type;
 
-  public abstract void setParent(ConfigSection parent);
+  public ConfigNode() {}
 
-  public abstract String getName();
+  public ConfigNode(ConfigSection parent, String name, Type type) {
+    this.type = type;
+    this.parent = parent;
+    this.name = name;
+  }
 
-  public abstract void setName(String name);
+  public ConfigSection getParent() {
+    return this.parent;
+  }
 
-  public abstract Type getType();
+  public void setParent(ConfigSection parent) {
+    this.parent = parent;
+  }
 
-  public abstract void setType(Type type);
+  public String getName() {
+    return this.name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public Type getType() {
+    return this.type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
+  }
 
   @Override
   public int hashCode() {
@@ -20,7 +44,7 @@ public abstract class ConfigNode implements Comparable<ConfigNode> {
 
   @Override
   public boolean equals(Object o) {
-    return o != null && o instanceof ConfigNode && o.hashCode() == this.hashCode();
+    return o instanceof ConfigNode && o.hashCode() == this.hashCode();
   }
 
   @Override
@@ -34,11 +58,27 @@ public abstract class ConfigNode implements Comparable<ConfigNode> {
   }
 
   public enum Type {
-    SIMPLE_SECTION,
-    ROOT_SECTION,
-    SIMPLE_OPTION,
-    COMPLEX_OPTION,
-    MAP_OPTION,
-    ARRAY_OPTION;
+    SIMPLE_SECTION(true, true),
+    ROOT_SECTION(true, true),
+    SIMPLE_OPTION(false, false),
+    COMPLEX_OPTION(true, false),
+    MAP_OPTION(true, false),
+    ARRAY_OPTION(true, false);
+
+    private final boolean canIterate;
+    private final boolean isSection;
+
+    Type(boolean canIterate, boolean isSection) {
+      this.canIterate = canIterate;
+      this.isSection = isSection;
+    }
+
+    public boolean canIterate() {
+      return canIterate;
+    }
+
+    public boolean isSection() {
+      return isSection;
+    }
   }
 }

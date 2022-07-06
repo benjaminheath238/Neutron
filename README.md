@@ -6,7 +6,7 @@ Neutron is a library written in java containing some common functionality such a
 
 ## Installation
 
-Neutron requires [Apache Maven](https://maven.apache.org/) to be installed for the following to work.
+Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool it must be installed for the following to function.
 
 1. Download the source code either from [GitHub](https://github.com/benjaminheath238/Neutron/archive/refs/heads/master.zip) directly or via `git clone https://github.com/benjaminheath238/Neutron.git`
 2. If the code was downloaded from GitHub the zip file must be unzipped
