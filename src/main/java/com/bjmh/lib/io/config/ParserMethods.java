@@ -4,11 +4,6 @@ public class ParserMethods {
   private ParserMethods() {
   }
 
-  public static void main(String[] args) {
-    Configuration cpm = new Configuration("root");
-    cpm.parse("/home/user/EmilyJennson.ini", INI_PARSER_WITH_ARRAYS_AND_MAPS);
-    cpm.foreach(System.out::println);
-  }
 
   public static final ParserMethod INI_PARSER_SIMPLE = new ParserMethod() {
     public void parse(String line, Configuration config) {
