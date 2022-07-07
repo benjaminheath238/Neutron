@@ -50,4 +50,4 @@ dependencies {
 
 ## Licensing
 
-This software is licensed under the MIT license the definition of which can be found in the [LICENSE](LICENSE).
+This library is licensed under the MIT license the definition of which can be found in the [LICENSE](LICENSE) file.
