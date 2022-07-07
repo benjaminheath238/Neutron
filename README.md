@@ -50,4 +50,4 @@ dependencies {
 
 ## Licensing
 
-This software is licensed under the GPLv2 the definition of which can be found in the [LICENSE](LICENSE) file or at the [website](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html).
+This software is licensed under the MIT license the definition of which can be found in the [LICENSE](LICENSE).
