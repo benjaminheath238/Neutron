@@ -2,7 +2,7 @@
 
 ## Basic Class Overview
 
-Neutron handles config files by creating a tree similar to that used for XML parsing in the standerd Java packages.
+Neutron handles config files by creating a tree similar to that used for XML parsing in the standard Java packages.
 
 The base type in the created tree is the `ConfigNode` class that contains the most simple functionality such as naming the node, setting the nodes type and setting the nodes parent. This class is extended by two other classes ConfigOption and ConfigSection.
 
@@ -10,13 +10,13 @@ The `ConfigOption` class is the primary method for creating and using key-value 
 
 The `ConfigSection` class is the primary method for ordering ConfigOptions. This class supports child ConfigNodes. It has the new methods `void addChild(ConfigNode child)`, `ConfigNode getChild(String name)` and `Collection<ConfigNode> getChildren()`.
 
-To explain, an example is; if the ConfigOption is a file then ConfigSection is a folder, so ConfigSections can have ConfigOptions and other ConfigSections as children just like the folder can have sub-folders and files.
+To explain, an example is; if the ConfigOption is a file then ConfigSection is a folder, so ConfigSections can have ConfigOptions and other ConfigSections as children just like the folder can have sub-folders and files as children.
 
-The `Configuration` class serves as the top level ConfigSection that all children can be accessed from. Children can be accessed either by using the name of the child but this only works for direct children the alternative method is using the `ConfigPath` class and parsing it the binary name of the child (`section.subsection.name`).
+The `Configuration` class serves as the top level ConfigSection that all children can be accessed from. Children can be accessed either by using the name of the child but this only works for direct children the alternative method is using the `ConfigPath` class and parsing it the binary name of the child (`section.subsection.name`) this method allows for access of ConfigNodes at any level of the tree.
 
 ### Node Types
 
-The type of ConfigNode is set when the file is parsed. The Type can be found in the ConfigNode class. The types are as follows
+The type of a ConfigNode is set when the file is parsed. The Type enum can be found in the ConfigNode class. The types are as follows
 
 | Name             | canIterate | isSection |
 |------------------|------------|-----------|
@@ -33,13 +33,13 @@ These can be used to chooce how to operate on a ConfigNode. The `ROOT_SECTION` i
 
 ## Iteration
 
-The ConfigSection class supports iteration through its child nodes via either calling the methods `void foreach(ConfigConsumer)` or by iterating through the result of calling `Collection<ConfigNode> getChildren()`.
+The ConfigSection class supports iteration through its child nodes via either calling the method `void foreach(ConfigConsumer)` or by iterating through the result of calling the `Collection<ConfigNode> getChildren()` method but this method will only iterate through a ConfigSections direct children.
 
 The functional interface `ConfigConsumer` is used for iteration via the `void foreach(ConfigConsumer)` method, like its super interface the functional method is `void accept(ConfigNode)`.
 
 ### Order Of Iteration
 
-The order of iteration is non reliable using the `void foreach(ConfigConsumer)` method therefore if the order is important the previously mentioned method should be overwritten.
+The order of iteration is non reliable using the `void foreach(ConfigConsumer)` method therefore if the order is important then this method should be overwritten.
 
 ---
 
@@ -56,11 +56,11 @@ There is no default parser and instead the config file is parsed using the `Pars
 
 Each implementation extends the last so `INI_PARSER_WITH_SUB_SECTIONS` does everything that `INI_PARSER_SIMPLE` does and more.
 
-All the parser methods can have comments using the `#` or `;` and the use of `"` around values is not needed. It is not needed for all options to be in a section but may cause unplanned inheritance.
+All the parser methods can have comments using either `#` or `;`. The use of `"` around values is not needed. It is not needed for all options to be in a section but may cause unplanned inheritance.
 
 The `INI_PARSER_SIMPLE` implementation only parses key-value pairs of the form `key="value"` and adds them to the root Configuration object.
 
-The `INI_PARSER_WITH_SECTIONS` implementation can also parse sections defined using headers in the form `[name]`.
+The `INI_PARSER_WITH_SECTIONS` implementation can also parse sections defined using headers in the form `[name]`. Key-value pairs will be added to the section or root if no sections exists.
 
 The `INI_PARSER_WITH_COMPLEX_OPTIONS` implementation can also parse key-value pairs that are of the form `name=(key0="value" ...)`.
 

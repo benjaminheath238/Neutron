@@ -3,7 +3,8 @@ package com.bjmh.lib.io.config;
 public class ConfigOption extends ConfigNode {
   protected String value;
 
-  public ConfigOption() {}
+  public ConfigOption() {
+  }
 
   public ConfigOption(ConfigSection parent, String name, Type type, String value) {
     this.type = type;

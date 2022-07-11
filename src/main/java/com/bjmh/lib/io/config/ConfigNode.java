@@ -5,7 +5,8 @@ public class ConfigNode implements Comparable<ConfigNode> {
   protected String name;
   protected Type type;
 
-  public ConfigNode() {}
+  public ConfigNode() {
+  }
 
   public ConfigNode(ConfigSection parent, String name, Type type) {
     this.type = type;

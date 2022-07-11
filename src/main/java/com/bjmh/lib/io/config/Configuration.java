@@ -15,7 +15,6 @@ public class Configuration extends ConfigSection {
     this.type = Type.ROOT_SECTION;
   }
 
-
   public ConfigNode getChild(ConfigPath path) {
     ConfigNode node = this.getChild(path.next());
     while (path.hasNext()) {
@@ -27,7 +26,6 @@ public class Configuration extends ConfigSection {
     }
     return node;
   }
-
 
   @Override
   public void setParent(ConfigSection parent) {

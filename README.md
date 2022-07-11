@@ -6,15 +6,15 @@ Neutron is a library written in java containing some common functionality such a
 
 ## Installation
 
-Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool it must be installed for the following to function.
+Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool and Java 17 both of which must be installed for the following to function.
 
 1. Download the source code either from [GitHub](https://github.com/benjaminheath238/Neutron/archive/refs/heads/master.zip) directly or via `git clone https://github.com/benjaminheath238/Neutron.git`
-2. If the code was downloaded from GitHub the zip file must be unzipped
-3. Enter the downloaded folder containing the `pom.xml` 
-4. In a termial/shell enter one of the following
+    * If the code was downloaded from GitHub the zip file must be unzipped
+2. Enter the downloaded folder containing the `pom.xml` 
+3. In a termial/shell enter one of the following
     * `mvn package` to create a jar file in `target/neutron-X.x.jar`
     * `mvm install` to install Neutron to your local Maven repository
-5. Neutron can now be appropriately added to the dependencies of projects
+4. Neutron can now be appropriately added as a dependency of projects
 
 ### Adding Neutron to a Maven project
 

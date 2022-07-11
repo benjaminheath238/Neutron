@@ -4,7 +4,6 @@ public class ParserMethods {
   private ParserMethods() {
   }
 
-
   public static final ParserMethod INI_PARSER_SIMPLE = new ParserMethod() {
     public void parse(String line, Configuration config) {
       line = removeComments(line);

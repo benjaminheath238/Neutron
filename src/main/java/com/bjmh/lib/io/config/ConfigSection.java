@@ -7,7 +7,8 @@ import java.util.Map;
 public class ConfigSection extends ConfigNode {
   protected Map<String, ConfigNode> children = new HashMap<>();
 
-  public ConfigSection() {}
+  public ConfigSection() {
+  }
 
   public ConfigSection(ConfigSection parent, String name, Type type) {
     this.type = type;
@@ -22,7 +23,6 @@ public class ConfigSection extends ConfigNode {
   public Collection<ConfigNode> getChildren() {
     return this.children.values();
   }
-
 
   public void addChild(ConfigNode child) {
     child.setParent(this);
@@ -46,7 +46,7 @@ public class ConfigSection extends ConfigNode {
   public boolean equals(Object o) {
     return o instanceof ConfigSection && this.hashCode() == o.hashCode();
   }
-  
+
   @Override
   public String toString() {
     return "{name="
