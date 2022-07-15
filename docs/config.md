@@ -1,4 +1,4 @@
-# Configuration
+# Configuration Files
 
 ## Basic Class Overview
 
