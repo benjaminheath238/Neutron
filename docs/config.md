@@ -45,7 +45,7 @@ The order of iteration is non reliable using the `void foreach(ConfigConsumer)` 
 
 ## Parsing
 
-There is no default parser and instead the config file is parsed using the `ParserMethod` interface, there are several simple implementations of this iterface in the `ParserMethods` class and the methods used can be found in the same class. The supported parsers are
+There is no default parser and instead the config file is parsed using the `ParserMethod` interface, there are several simple implementations of this iterface in the `ParserMethods` class and the methods used can be found in the same class. The implemented parsers are
 
 1. `INI_PARSER_SIMPLE`
 2. `INI_PARSER_WITH_SECTIONS`
