@@ -20,6 +20,21 @@ public class ConfigSection extends ConfigNode {
     return this.children.get(name);
   }
 
+  public ConfigSection getChildAsSection(String name) {
+   if (!(getChild(name) instanceof ConfigSection))  return null;
+   return (ConfigSection) getChild(name);
+  }
+
+  public ConfigOption getChildAsOption(String name) {
+    if (!(getChild(name) instanceof ConfigOption))  return null;
+    return (ConfigOption) getChild(name);
+   }
+
+   public String getChildValue(String name) {
+    if (getChildAsOption(name) == null) return null;
+    return getChildAsOption(name).getValue();
+   }
+
   public Collection<ConfigNode> getChildren() {
     return this.children.values();
   }

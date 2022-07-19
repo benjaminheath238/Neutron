@@ -6,9 +6,9 @@ Neutron handles config files by creating a tree similar to that used for XML par
 
 The base type in the created tree is the `ConfigNode` class that contains the most simple functionality such as naming the node, setting the nodes type and setting the nodes parent. This class is extended by two other classes ConfigOption and ConfigSection.
 
-The `ConfigOption` class is the primary method for creating and using key-value pairs. The only new methods are `String getValue()` and `void setValue(String)`
+The `ConfigOption` class is the primary method for creating and using key-value pairs.
 
-The `ConfigSection` class is the primary method for ordering ConfigOptions. This class supports child ConfigNodes. It has the new methods `void addChild(ConfigNode child)`, `ConfigNode getChild(String name)` and `Collection<ConfigNode> getChildren()`.
+The `ConfigSection` class is the primary method for ordering ConfigOptions. This class supports child ConfigNodes.
 
 To explain, an example is; if the ConfigOption is a file then ConfigSection is a folder, so ConfigSections can have ConfigOptions and other ConfigSections as children just like the folder can have sub-folders and files as children.
 
