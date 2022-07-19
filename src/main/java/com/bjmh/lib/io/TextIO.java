@@ -51,4 +51,21 @@ public class TextIO {
         }
         System.out.print(builder.toString());
     }
+    
+    public static void err(String text) {
+        System.err.print(text);
+    }
+
+    public static void err(String text, Object... args) {
+        StringBuilder builder = new StringBuilder(text);
+        for (int i = 0; i < args.length; i++) {
+            while (true) {
+                int index = builder.indexOf("{" + i + "}");
+                if (index == -1)
+                    break;
+                builder.replace(index, index + 3, (args[i] == null) ? "null" : args[i].toString());
+            }
+        }
+        System.err.print(builder.toString());
+    }
 }
