@@ -34,7 +34,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '17' }}
         uses: actions/upload-artifact@v3
         with:
-          path: build/libs/
+          path: lib/build/libs/
           name: Jars
 
       - name: Upload Assets
@@ -50,4 +50,7 @@ jobs:
 
       - name: Publish to GitHub packages
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '17' }}
+        env:
+          USERNAME: ${{ github.actor.login }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew publish
