@@ -38,8 +38,12 @@ publishing {
             }
         }
     }
+
     publications {
         gpr(MavenPublication) {
+            groupId project.group
+            artifactId 'neutron'
+            version project.version
             from(components.java)
         }
     }
