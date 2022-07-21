@@ -45,7 +45,7 @@ jobs:
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: lib/build/libs/neutron-${{ env.VERSION }}.jar
-          asset_name: Neutron-${{ env.VERSION }}.jar
+          asset_name: neutron-${{ env.VERSION }}.jar
           asset_content_type: application/java-archive
 
       - name: Publish to GitHub packages
