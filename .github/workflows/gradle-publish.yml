@@ -50,6 +50,4 @@ jobs:
 
       - name: Publish to GitHub packages
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.java == '17' }}
-        env:        
-          USERNAME: ${{ actor.login }}
         run: ./gradlew publish

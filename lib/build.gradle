@@ -33,7 +33,7 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/benjaminheath238/neutron")
             credentials {
-                username = System.getenv("USERNAME")
+                username = System.getenv("GITHUB_USER_NAME")
                 password = System.getenv("GITHUB_TOKEN")
             }
         }
