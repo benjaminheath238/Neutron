@@ -6,6 +6,11 @@ plugins {
 group = 'com.bjmh.lib'
 version = '1.5.1'
 
+if (System.getenv("GITHUB_ENV")) {
+    def env = new File(System.getenv("GITHUB_ENV"))
+    env.append("VERSION=${version}")
+}
+
 repositories {
     mavenCentral()
 }
@@ -20,4 +25,22 @@ tasks.named('test') {
 
 jar {
   baseName 'neutron'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/benjaminheath238/neutron")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
