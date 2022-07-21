@@ -1,20 +1,22 @@
 # Neutron
 
-Neutron is a library written in java containing some common functionality such as config file parsing and network operations (not currently implemented).
+Neutron is a library written in java containing some functionality such as config file parsing and network operations (not currently implemented).
 
 ---
 
 ## Installation
 
-Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool and Java 17 both of which must be installed for the following to function.
+### Requirements
 
-1. Download the source code either from [GitHub](https://github.com/benjaminheath238/Neutron/archive/refs/heads/master.zip) directly or via `git clone https://github.com/benjaminheath238/Neutron.git`
-    * If the code was downloaded from GitHub the zip file must be unzipped
-2. Enter the downloaded folder containing the `pom.xml` 
-3. In a termial/shell enter one of the following
-    * `mvn package` to create a jar file in `target/neutron-X.x.jar`
-    * `mvm install` to install Neutron to your local Maven repository
-4. Neutron can now be appropriately added as a dependency of projects
+* [Gradle](https://gradle.org/install/)
+* [Java 17](https://adoptium.net/en-GB/)
+
+### Process
+
+1. Download the source code
+2. Navigate into the directory containing the `gradlew` file
+3. Enter in a terminal/shell either `.\gradlew.bat publishToMavenLocal` or `./gradlew publishToMavenLocal` for Windows or Linux systems respectively
+4. Add Neutron as a dependency as shown below
 
 ### Adding Neutron to a Maven project
 
@@ -23,7 +25,7 @@ Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool and Jav
     ...
     <dependency>
         <groupId>com.bjmh.lib</groupId>
-        <artifactId>Neutron</artifactId>
+        <artifactId>neutron</artifactId>
         <version>[SUB VERSION HERE]</version>
     </dependency>
     ...
@@ -35,7 +37,7 @@ Neutron uses [Apache Maven](https://maven.apache.org/) as the build tool and Jav
 ```groovy
 dependencies {
     ...
-    neutron 'com.bjmh.lib:neutron:[SUB VERSION HERE]'
+    implementation 'com.bjmh.lib:neutron:[SUB VERSION HERE]'
     ...
 }
 ```
